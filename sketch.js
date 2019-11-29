@@ -62,7 +62,6 @@ function setup() {
 
     rebuildInput = select("#rebuild");
     rebuildInput.mousePressed(() => {
-        console.log("1sad");
         createMap();
         createPath();
     })
