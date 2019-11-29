@@ -2,8 +2,10 @@ let mapInput, zoomInput, pathInput, rebuildInput;
 let drawMap, drawPath;
 let grid = [];
 let path = [];
+let rawGrid = [];
 let hasGrid = false;
 let hasPath = false;
+let pathCost;
 let w = 20;
 
 const colors = ["#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059", "#FFDBE5", "#7A4900", "#0000A6"]
@@ -52,17 +54,18 @@ class Node {
 
 function setup() {
     mapInput = select("#mapInput");
-    mapInput.input(createMap);
+    mapInput.input(createPath);
 
     zoomInput = select("#zoom");
-    zoomInput.input(createMap);
+    zoomInput.input(createPath);
     
     pathInput = select("#pathInput");
     pathInput.input(createPath);
 
+    pathCostOutput = select("#pathCost");
+
     rebuildInput = select("#rebuild");
     rebuildInput.mousePressed(() => {
-        createMap();
         createPath();
     })
 
@@ -94,15 +97,51 @@ function draw() {
     }
 }
 
+function getNodeCost(y,x){
+    let value;
+    if (x && y) {
+        const row = rawGrid[y];
+        if(row){
+            value = row[x];
+        }
+    } else {
+        return null;
+    }
+    switch (value) {
+        case "C":
+            return 1;
+        case "H":
+            return 2;
+        case "D":
+            return 1;
+        case "P":
+            return 1;
+        case "G":
+            return 1;
+        case "N":
+            return null;
+        default:
+            // Only left option is teleport
+            return 0;
+    }
+}
+
 function createPath(){
+    createMap();
     const pathData = pathInput.value().split('\n');
+    pathCost = 0;
     path = pathData.map(val => {
         let split = val.split(" ");
+        let nodeCost = getNodeCost(split[1], split[0]);
+        if (nodeCost != null) {
+            pathCost += nodeCost;
+        }
         return {
             x: split[0],
             y: split[1]
         }
     })
+    pathCostOutput.html(`Path cost: ${pathCost}`);
     hasPath = true;
     redraw();
 }
@@ -120,10 +159,11 @@ function createMap(){
     createCanvas(m*w, n*w);
 
     for (const [y, row] of mapData.entries()) {
+        rawGrid[y] = [];
         for (const [x, value] of row.split("").entries()) {
-            grid.push(new Node(x, y, value))
+            grid.push(new Node(x, y, value));
+            rawGrid[y][x] = value;
         }
     }
     hasGrid = true;
-    createPath();
 }

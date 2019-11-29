@@ -1,12 +1,10 @@
 * {
-    font-family: "Roboto";
+  font-family: "Roboto";
 }
 .parent {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: 100px 100px repeat(8, 1fr);
-  grid-column-gap: 0px;
-  grid-row-gap: 0px;
+  grid-template-rows: 50px 100px 100px repeat(8, 1fr);
 }
 
 body {
@@ -20,29 +18,50 @@ textarea {
   outline-color: #9e9e9e;
   margin: 20px;
   padding: 10px;
-  font-family: Courier New; 
+  font-family: Courier New;
 }
 
-#mapInput {
-  grid-area: 1 / 1 / 3 / 3;
-  max-height: 200px;
+.mapTitle {
+  grid-area: 1 / 1 / 2 / 2;
+  text-align: left;
+  margin-left: 20px;
+  text-transform: uppercase;
 }
-#pathInput {
-  grid-area: 1 / 4 / 3 / 6;
-  max-height: 200px;
+.mapInput {
+  grid-area: 2 / 1 / 4 / 3;
 }
-.zoomArea {
-  grid-area: 1 / 3 / 2 / 4;
-  max-height: 200px;
+.pathTitle {
+  grid-area: 1 / 4 / 2 / 5;
+  text-align: left;
+  margin-left: 20px;
+  text-transform: uppercase;
 }
-#copyRight {
+.pathInput {
+  grid-area: 2 / 4 / 4 / 5;
+}
+.pathInfo {
+  grid-area: 2 / 5 / 4 / 6;
+  padding-left: 20px;
+}
+.zoom {
   grid-area: 2 / 3 / 3 / 4;
-  max-height: 200px;
-  justify-self: center;
+}
+.rebuild {
+  grid-area: 3 / 3 / 4 / 4;
+}
+.pathInfoTitle {
+  grid-area: 1 / 5 / 2 / 6;
+  text-align: left;
+  margin-left: 20px;
+  text-transform: uppercase;
+}
+#pathCost {
+    color: white;
 }
 #rebuild {
-  width: 200px;
-  height: 50px;
+  justify-content: center;
+  align-self: center;
+  padding: 20px;
   background-color: #00c853;
   border: none;
   border-radius: 10px;
@@ -62,7 +81,7 @@ h3 {
   color: white;
 }
 canvas {
-  grid-area: 3 / 1 / 11 / 6;
+  grid-area: 4 / 1 / 9 / 6;
   justify-self: center;
 }
 
