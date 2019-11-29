@@ -78,7 +78,7 @@ function setup() {
 }
 
 function draw() {
-    background(255);
+    background(0);
     if (hasGrid) {
         grid.map(node => node.show());
     }

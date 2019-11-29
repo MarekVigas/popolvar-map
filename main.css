@@ -6,6 +6,19 @@
   grid-row-gap: 0px;
 }
 
+body {
+  background-color: #000000;
+}
+
+textarea {
+  background-color: #424242;
+  border: none;
+  color: #ffffff;
+  outline-color: #9e9e9e;
+  margin: 20px;
+  padding: 10px;
+}
+
 #mapInput {
   grid-area: 1 / 1 / 3 / 3;
   max-height: 200px;
@@ -17,19 +30,35 @@
 #zoom {
   grid-area: 1 / 3 / 2 / 4;
   max-height: 200px;
+  outline: none;
 }
 #copyRight {
   grid-area: 2 / 3 / 3 / 4;
   max-height: 200px;
   justify-self: center;
 }
-button {
-    width: 200px;
-    height: 50px;
+#rebuild {
+  width: 200px;
+  height: 50px;
+  background-color: #00c853;
+  border: none;
+  border-radius: 10px;
+  outline: none;
+  text-transform: uppercase;
+  font-weight: 600;
+  font-size: larger;
+}
+#rebuild:hover {
+  background-color: #00e676;
+}
+#rebuild:active {
+  box-shadow: inset 0px 0px 5px 3px rgba(0, 0, 0, 0.36);
 }
 h3 {
-    text-align: center;
+  text-align: center;
+  color: white;
 }
 canvas {
   grid-area: 3 / 1 / 11 / 6;
+  justify-self: center;
 }
