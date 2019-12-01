@@ -6,7 +6,10 @@ let rawGrid = [];
 let hasGrid = false;
 let hasPath = false;
 let pathCost;
-let w = 20;
+let showIndex = 0;
+let speed = 4;
+let noDrawOnInput = false;
+let w = 80;
 
 const colors = ["#FFFF00", "#1CE6FF", "#FF34FF", "#FF4A46", "#008941", "#006FA6", "#A30059", "#FFDBE5", "#7A4900", "#0000A6"]
 
@@ -57,7 +60,20 @@ function setup() {
     mapInput.input(createPath);
 
     zoomInput = select("#zoom");
-    zoomInput.input(createPath);
+    zoomInput.input(() => {
+        w = zoomInput.value();
+        createPath();
+    });
+
+    zoomInput.mousePressed(() => {
+        noDrawOnInput = true;
+        speed = 60;
+    })
+    zoomInput.mouseReleased(() => {
+        noDrawOnInput = false;
+        speed = speedInput.value();
+        createPath();
+    })
     
     pathInput = select("#pathInput");
     pathInput.input(createPath);
@@ -69,6 +85,13 @@ function setup() {
         createPath();
     })
 
+    speedInput = select("#frameRate");
+    speedInput.input(() => {
+        speed = speedInput.value();
+        showIndex = 0;
+        loop();
+    })
+
     pathImg = loadImage('images/path.jpeg');
     bushImg = loadImage('images/bush.png');
     dragonImg = loadImage('images/dragon.png');
@@ -76,24 +99,48 @@ function setup() {
     generatorImg = loadImage('images/generator.png');
     rocksImg = loadImage('images/rocks.png');
     teleportImg = loadImage('images/teleport.png');
-    noLoop();
+    popolvarImg = loadImage('images/popolvar.png');
 }
 
 function draw() {
+    frameRate(speed);
     background(0);
     if (hasGrid) {
         grid.map(node => node.show());
     }
-    if(hasPath) {
-        noStroke();
-        fill(255, 0, 0, 100);
-        path.map(point => circle(point.x*w + w/2, point.y*w + w/2, w/2));
-        noFill();
-        stroke(255, 0, 0, 100);
-        strokeWeight(w/4);
-        beginShape();
-        path.map(point => vertex(point.x*w + w/2, point.y*w + w/2));
-        endShape();
+    if (!noDrawOnInput){
+        if(hasPath) {
+            path.map((point, index, points) => {
+                if (index <= showIndex) {
+                    if (index > 0) {
+                        stroke(255,0,0);
+                        strokeWeight(w/10);
+                        line(point.x*w + w/2, point.y*w + w/2, points[index-1].x*w + w/2, points[index-1].y*w + w/2);
+                        noStroke();
+                    }
+                }
+            })
+            path.map((point, index) => {
+                if (index <= showIndex) {
+                    fill(255, 0, 0);
+                    circle(point.x*w + w/2, point.y*w + w/2, w/2);
+                    fill(255);
+                    rectMode(CENTER);
+                    textAlign(CENTER, CENTER);
+                    textSize(w/3);
+                    text(index, point.x*w + w/2, point.y*w + w/2);
+                    rectMode(CORNER);
+                    noFill();
+                    if (index == showIndex) {
+                        image(popolvarImg, point.x*w, point.y*w, w, w);
+                    }
+                }
+            });
+        }
+        showIndex += 1;
+        if (showIndex == path.length) {
+            noLoop();
+        }
     }
 }
 
@@ -127,6 +174,7 @@ function getNodeCost(y,x){
 }
 
 function createPath(){
+    showIndex = 0;
     createMap();
     const pathData = pathInput.value().split('\n');
     pathCost = 0;
@@ -143,11 +191,10 @@ function createPath(){
     })
     pathCostOutput.html(`Path cost: ${pathCost}`);
     hasPath = true;
-    redraw();
+    loop();
 }
 
 function createMap(){
-    w = zoomInput.value();
     grid = [];
     const dataArray = mapInput.value().split('\n');
     const settings = dataArray[0].split(" ");
