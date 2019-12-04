@@ -100,6 +100,9 @@ function setup() {
     rocksImg = loadImage('images/rocks.png');
     teleportImg = loadImage('images/teleport.png');
     popolvarImg = loadImage('images/popolvar.png');
+    if (random(1) < 0.6) {
+        popolvarImg = loadImage('images/jozko.png');
+    }
 }
 
 function draw() {
